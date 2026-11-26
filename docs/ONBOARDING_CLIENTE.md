@@ -1,5 +1,7 @@
 # ONBOARDING_CLIENTE.md
 
+Para o ciclo atual do Oba Prêmios, a [documentação White Label V2.0](https://github.com/Leandroctr/pwa-install-landings/tree/6096042c9c2782fc34bd50288b6eeef2d9ab70f7/docs) rege a implantação individual e o checklist por cliente. As seções abaixo registram o procedimento anterior e o contexto do ambiente compartilhado.
+
 # Checklist de Onboarding de Novo Cliente
 
 **Projeto:** app-big-pwa  

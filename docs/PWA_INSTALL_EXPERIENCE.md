@@ -1,5 +1,17 @@
 # PWA_INSTALL_EXPERIENCE.md
 
+## White Label V2.0 no Oba Prêmios
+
+A Central `/instalar` usa nome curto, ícones e cores do tenant. O Android oferece o prompt nativo por ação do usuário quando disponível. No iPhone, o Safari oferece o fluxo manual de adicionar à Tela de Início. A Central identifica instalação pelos eventos e pelo modo standalone. A Central oferece navegação de documento de volta ao launcher.
+
+A raiz usa Splash React/CSS, abertura da plataforma com uma única navegação, CTA, suporte e temporizador de contingência. O Clube VIP segue a configuração do tenant. O launcher deixa inertes as referências a HTML legado, que permanecem preservadas no cadastro histórico.
+
+O worker avança de `app-big-v2` para `app-big-v3` com navegação network-first. Atualiza `/pwa-offline` por requisição de mesma origem sem credenciais nem redirects, valida resposta e mantém o último fallback válido. Requisições autorizadas e rotas admin/API ficam fora do fallback. A raiz usa `private, no-store`. A rota offline usa a CSP geral.
+
+Validar em aparelhos reais a atualização sobre instalação v2, abertura offline, reconexão, Android, iPhone e retomada no launcher. O [checklist oficial](https://github.com/Leandroctr/pwa-install-landings/tree/6096042c9c2782fc34bd50288b6eeef2d9ab70f7/docs/WHITE_LABEL_ACCEPTANCE_CHECKLIST.md) orienta a homologação.
+
+As seções seguintes registram a proposta histórica de modal de instalação.
+
 # PWA Install Experience
 
 **Projeto:** app-big-pwa  

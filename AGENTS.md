@@ -17,103 +17,28 @@ Sempre ler, nesta ordem:
 7. `docs/ONBOARDING_CLIENTE.md`
 8. `docs/ROADMAP.md` (quando existir)
 
-Se algum documento estiver ausente, continuar normalmente.
+Se algum documento local estiver ausente, continuar normalmente. Para alterações White Label, ler também os cinco documentos oficiais da [documentação White Label V2.0](https://github.com/Leandroctr/pwa-install-landings/tree/6096042c9c2782fc34bd50288b6eeef2d9ab70f7/docs).
 
 ---
 
 ## Regras do projeto
 
-Este projeto está em produção.
+O Oba Prêmios tem implantação individual. O GitHub é a fonte oficial para branches, builds e versões. O baseline consumidor é MegaBingo7 @ 652f72a4d886c6e87eafd3812df710c235d6b969.
 
-Nenhuma alteração estrutural pode ser feita sem aprovação.
+Preservar a paridade funcional e de segurança, os controles CETEC e R-1 e a identidade configurada do tenant. A gestão global pertence à administração central. O Oba mantém o painel do consumidor e o acesso administrativo por tenant com MFA TOTP/AAL2.
 
-**Nunca:**
+Preservar o domínio, os dados, as inscrições push e o histórico do tenant. Alterações em autenticação, Service Worker, OneSignal, variáveis ou banco exigem autorização no escopo da etapa. Deploy de produção exige autorização explícita. Em banco compartilhado, preservar as migrations como histórico e jamais reaplicá-las como parte do port.
 
-- alterar Service Worker sem aprovação;
-- alterar OneSignal sem aprovação;
-- alterar schema SQL sem aprovação;
-- alterar autenticação sem aprovação;
-- alterar `NEXT_PUBLIC_*` sem aprovação;
-- alterar produção diretamente;
-- fazer deploy automático;
-- fazer commit automático.
-
----
-
-## Sincronização entre PWAs
-
-**Este repositório alimenta múltiplos projetos PWA em produção simultaneamente.**
-
-PWAs ativos:
-
-| Cliente | Domínio | Vercel | GitHub |
-|---|---|---|---|
-| BigPix | `pwa.app-bigpix.com` | `moline/app-big` | `Leandroctr/app-big` |
-| MegaBingo7 | `pwa.app-megabingo7.com` | `moline/app-megabingo7` | `Leandroctr/app-megabingo7` |
-| ObaPremios | `pwa.app-obapremios.com` | `moline/app-obapremios` | `Leandroctr/app-obapremios` |
-| PremiosAoVivo | `pwa.app-premiosaovivo.com` | `moline/app-premiosaovivo` | `Leandroctr/app-premiosaovivo` |
-| Pix Keno | `pwa.app-pixkeno.com` | `moline/app-pixkeno` | `Leandroctr/app-pixkeno` |
-| SuperKeno | `pwa.app-superkeno.com` | `moline/app-superkeno` | `Leandroctr/app-superkeno` |
-
-### Distinção entre commit local e versão aprovada
-
-- Commits locais, experimentais ou em desenvolvimento **não precisam** ser implantados imediatamente em todos os PWAs.
-- Toda **versão aprovada para produção** deve ser implantada em todos os PWAs ativos sem exceção.
-- Uma entrega só é considerada **concluída** quando todos os PWAs ativos estiverem rodando a mesma versão aprovada.
-
-### Diferenças permitidas entre clientes
-
-As únicas diferenças aceitas entre projetos são configuradas via variáveis de ambiente ou banco de dados — nunca via código:
-
-- `tenant_domain`
-- `NEXT_PUBLIC_PUBLIC_URL`
-- Domínio (DNS e Vercel)
-- Imagens: logos, ícones, splash
-- Cores e tema
-- OneSignal App ID
-- Dados em `app_settings`
-- Variáveis de ambiente específicas do cliente
-
-### Diferenças não permitidas entre clientes
-
-É **proibido** que os PWAs em produção apresentem divergências em:
-
-- Código-fonte (lógica de upload, push, autenticação, rotas)
-- Service Worker — qualquer diferença exige aprovação explícita
-- Manifest — qualquer diferença exige aprovação explícita
-- Schema ou migrations aplicadas parcialmente — deve haver documentação registrando o estado de cada PWA
-
-### Verificação obrigatória antes de considerar uma versão concluída
-
-1. Listar todos os PWAs ativos (tabela acima).
-2. Confirmar o commit/build implantado em cada um.
-3. Confirmar que nenhum PWA ficou desatualizado.
-4. Se algum PWA não puder ser atualizado no momento, registrar a pendência explicitamente antes de encerrar a sessão.
-
-**Nunca assumir que um push em um repositório atualiza os demais.**
-
-### Regra futura planejada
-
-Criar endpoint de diagnóstico/versionamento (`/api/admin/version` ou similar) para exibir commit, build e tenant de cada PWA em tempo real — a ser implementado em etapa posterior com aprovação.
+Quando autorizados, implementação, testes, commit, push, PR e CI podem ocorrer no mesmo fluxo. Integrar a main por merge commit com PR, branch atualizada e check verify aprovado. Aplicar o checklist White Label por cliente antes de encerrar a implantação.
 
 ---
 
 ## Fluxo obrigatório
 
-**Antes de implementar:**
-
-1. Informar quais arquivos serão alterados.
-2. Informar riscos.
-3. Informar impacto esperado.
-
-**Depois de implementar:**
-
-1. Listar arquivos criados.
-2. Listar arquivos modificados.
-3. Atualizar a documentação correspondente.
-4. Mostrar `git status --short`.
-5. Esperar aprovação antes de commit.
-6. Após o commit, verificar quais PWAs ainda não têm o commit e fazer push para todos.
+1. Confirmar repositório, pasta, remote, branch, HEAD, upstream e working tree. Preservar alterações locais.
+2. Conferir o escopo e registrar arquivos, riscos e impacto antes de implementar.
+3. Revisar o diff, atualizar a documentação correspondente e executar as verificações do projeto.
+4. Publicar apenas a branch autorizada do Oba. Registrar commit, PR, CI, evidências e rollback. Respeitar o escopo autorizado para merge e deploy.
 
 ---
 
@@ -128,15 +53,15 @@ Toda alteração técnica relevante deve atualizar a documentação corresponden
 | Arquitetura       | `docs/AUDIT_REPORT.md`         |
 | Planejamento      | `docs/FIRST_DELIVERY_PLAN.md`  |
 | Roadmap           | `docs/ROADMAP.md`              |
-| Novos PWAs        | `AGENTS.md` + `CLAUDE.md` (tabela de PWAs ativos) |
+| Onboarding White Label | `docs/ONBOARDING_CLIENTE.md` |
 
-Uma implementação não é considerada concluída enquanto a documentação não estiver atualizada e todos os PWAs não estiverem no mesmo commit.
+Atualizar a documentação do Oba e registrar as diferenças legítimas de identidade e responsabilidade administrativa em relação aos baselines.
 
 ---
 
 ## Arquitetura atual
 
-O projeto opera em **multi-tenant por domínio** — settings identificados por `tenant_domain`, em um banco Supabase **compartilhado pelos 6 PWAs ativos** (tabela acima).
+O projeto opera em **multi-tenant por domínio** — settings identificados por `tenant_domain`, em um banco Supabase **compartilhado pelos 6 PWAs ativos** (PWA-WL).
 
 > **Antes:** White label por deploy individual — settings identificados por `singleton_key` (coluna legada, mantida no banco sem uso no código).
 
@@ -146,9 +71,11 @@ O projeto opera em **multi-tenant por domínio** — settings identificados por 
 
 Antes de qualquer desenvolvimento, ler: `docs/TENANT_DOMAIN_AUDIT.md`.
 
+O endpoint administrativo de diagnóstico de versão permanece planejado para uma etapa própria.
+
 ### Estado da remediação CETEC (2026-09-03)
 
-A remediação CETEC de código está **CONCLUÍDA**. **Pendências técnicas CETEC abertas: 0.**
+O fechamento de 03/09/2026 é histórico. A revalidação formal de M-2, B-5 e C-2 permanece pendente conforme a Matriz CETEC do White Label V2.0.
 
 Não reabrir nem repetir essas correções. O detalhamento está em `docs/AUDIT_REPORT.md`, seção 18.
 
