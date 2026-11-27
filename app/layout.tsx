@@ -3,6 +3,7 @@ import "./globals.css";
 import { OneSignalInitializer } from "@/components/onesignal-initializer";
 import { ServiceWorkerRegister } from "@/components/service-worker-register";
 import { getAppSettings } from "@/lib/app-settings.server";
+import { fallbackIcons } from "@/lib/pwa-icon-assets";
 
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getAppSettings();
@@ -14,10 +15,10 @@ export async function generateMetadata(): Promise<Metadata> {
     manifest: "/manifest.webmanifest",
     metadataBase: settings.publicUrl ? new URL(settings.publicUrl) : undefined,
     icons: {
-      icon: settings.faviconUrl || settings.icon192Url || "/icons/icon-192.svg",
+      icon: settings.faviconUrl || fallbackIcons.favicon,
       apple: {
-        url: settings.icon192Url || "/icons/icon-192.svg",
-        sizes: "180x180",
+        url: settings.icon192Url || fallbackIcons.icon192,
+        sizes: "192x192",
       },
     },
     appleWebApp: {
@@ -51,8 +52,8 @@ export default async function RootLayout({
       <head>
         <link
           rel="apple-touch-icon"
-          sizes="180x180"
-          href={settings.icon192Url || "/icons/icon-192.svg"}
+          sizes="192x192"
+          href={settings.icon192Url || fallbackIcons.icon192}
         />
       </head>
       <body>

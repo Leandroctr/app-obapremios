@@ -48,18 +48,3 @@ export const appConfig: AppConfig = {
     supportFloatingLabel: readEnv("NEXT_PUBLIC_HOME_FLOATING_SUPPORT", "?"),
   },
 };
-
-export const appIconConfig = [
-  {
-    src: "/icons/icon-192.svg",
-    sizes: "192x192",
-    type: "image/svg+xml",
-    purpose: "any" as const,
-  },
-  {
-    src: "/icons/icon-512.svg",
-    sizes: "512x512",
-    type: "image/svg+xml",
-    purpose: "maskable" as const,
-  },
-];

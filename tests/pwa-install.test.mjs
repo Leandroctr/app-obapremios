@@ -126,6 +126,7 @@ test("manifest, service worker and OneSignal integration invariants remain intac
   assert.match(oneSignalInitializerSource, /serviceWorkerPath: "OneSignalSDKWorker\.js"/);
   assert.match(manifestSource, /start_url: "\/"/);
   assert.match(manifestSource, /display: "standalone"/);
+  assert.match(manifestSource, /src: icon512Src,\s*sizes: "512x512",\s*type: getMimeType\(icon512Src\),\s*purpose: "any"/);
   assert.match(serviceWorkerSource, /const CACHE_NAME = CACHE_PREFIX \+ "v3"/);
   assert.match(serviceWorkerSource, /const LEGACY_CACHE_NAME = CACHE_PREFIX \+ "v2"/);
   assert.match(serviceWorkerSource, /const OFFLINE_FALLBACK_URL = "\/pwa-offline"/);
