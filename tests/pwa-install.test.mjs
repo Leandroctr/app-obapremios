@@ -12,11 +12,13 @@ import {
 const installPageSource = readFileSync("app/instalar/page.tsx", "utf8");
 const installComponentSource = readFileSync("components/pwa-install-page.tsx", "utf8");
 const homeSource = readFileSync("app/page.tsx", "utf8");
+const layoutSource = readFileSync("app/layout.tsx", "utf8");
 const splashSource = readFileSync("components/native-splash.tsx", "utf8");
 const splashStyles = readFileSync("components/native-splash.module.css", "utf8");
 const manifestSource = readFileSync("app/manifest.ts", "utf8");
 const serviceWorkerSource = readFileSync("public/sw.js", "utf8");
 const notificationBannerSource = readFileSync("components/notification-vip-banner.tsx", "utf8");
+const oneSignalInitializerSource = readFileSync("components/onesignal-initializer.tsx", "utf8");
 
 test("platform detection covers Android, iOS including iPad desktop mode, and desktop", () => {
   assert.equal(detectInstallPlatform("Mozilla/5.0 (Linux; Android 15) Chrome/140"), "android");
@@ -56,7 +58,7 @@ test("the dedicated install route is isolated from the public launcher redirect"
   assert.match(installPageSource, /PwaInstallPage/);
   assert.doesNotMatch(installPageSource, /NEXT_PUBLIC_PLATFORM_URL|window\.location|redirectToPlatform/);
   assert.match(homeSource, /window\.location\.assign\(url\)/);
-  assert.match(homeSource, /setTimeout\(\(\) => redirectToPlatform\(url\), loaded\.redirectDelayMs\)/);
+  assert.match(homeSource, /setTimeout\(\(\) => redirectToPlatform\(openUrl\), settings\.redirectDelayMs\)/);
 });
 
 test("the launcher always renders the native splash and leaves legacy HTML inert", () => {
@@ -64,8 +66,19 @@ test("the launcher always renders the native splash and leaves legacy HTML inert
   assert.doesNotMatch(homeSource + splashSource, /splashHtmlUrl|<iframe|srcDoc|dangerouslySetInnerHTML|\bBlob\b/);
   assert.match(homeSource, /fetch\("\/api\/settings"/);
   assert.match(homeSource, /hasRedirected\.current = true;\s+window\.location\.assign\(url\)/);
-  assert.match(homeSource, /addEventListener\("push-sync-settled", pushSyncListener, \{ once: true \}\)/);
+  assert.match(homeSource, /addEventListener\("push-sync-settled", onPushSyncSettled\)/);
   assert.match(homeSource, /redirectToPlatform\(openUrl\)/);
+});
+
+test("the VIP offer uses live launcher settings and preserves the time to opt in", () => {
+  assert.doesNotMatch(layoutSource, /NotificationVipBanner/);
+  assert.match(homeSource, /settings\.notificationsEnabled\s*&&\s*\(\s*<NotificationVipBanner/);
+  assert.match(homeSource, /detail\?\.ok === true\) \{\s+redirectToPlatform\(openUrl\)/);
+  assert.match(homeSource, /activatingNotifications\s*\? undefined\s*:\s*window\.setTimeout/);
+  assert.match(notificationBannerSource, /pathname !== "\/"/);
+  assert.match(notificationBannerSource, /!\(id && optedIn\)/);
+  assert.match(oneSignalInitializerSource, /Notification\.permission === "granted"\) \{\s+await OneSignal\.User\.PushSubscription\.optIn\(\)/);
+  assert.match(oneSignalInitializerSource, /return OneSignal\.Notifications\.requestPermission\(\)/);
 });
 
 test("splash separates logo and artwork and retains accessible controls with reduced motion", () => {
@@ -114,6 +127,4 @@ test("manifest, service worker and OneSignal integration invariants remain intac
   assert.match(serviceWorkerSource, /const LEGACY_CACHE_NAME = CACHE_PREFIX \+ "v2"/);
   assert.match(serviceWorkerSource, /const OFFLINE_FALLBACK_URL = "\/pwa-offline"/);
   assert.match(serviceWorkerSource, /const MANIFEST_URL = "\/manifest\.webmanifest"/);
-  assert.match(notificationBannerSource, /pathname === "\/instalar"/);
-  assert.match(notificationBannerSource, /!isInstallRoute/);
 });
