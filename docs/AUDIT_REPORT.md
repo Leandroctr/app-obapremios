@@ -1355,3 +1355,14 @@ o warning preexistente de `formatDimension`), M-7 13/13, CETEC 8/8, auth/MFA
 16/16, upload 22/22, push 8/8 + 7/7, PWA 15/15, schema 8/8, CI policy 15/15 e
 git diff check. O npm audit encontrou zero vulnerabilidades, incluindo zero
 HIGH e zero CRITICAL.
+
+## 22. Port White Label V2.0 do Oba Prêmios — 2026-11-26
+
+Baseline consumidor MegaBingo7 @ 652f72a4d886c6e87eafd3812df710c235d6b969. O port incorpora a Central de Instalação, Splash nativo e worker v3. O cadastro, as inscrições push, o histórico administrativo, o MFA e os controles por tenant continuam sob as rotinas preexistentes.
+
+- **C-2.** O launcher usa React/CSS e deixa inerte o HTML legado, mantendo a referência histórica.
+- **M-2.** A CSP geral e os cinco headers permanecem. A exceção JSONP usa um App ID válido da configuração do build, no caminho do SDK, apenas em HTML navegável na raiz. `/instalar`, `/pwa-offline`, admin, RSC e prefetch seguem com a CSP geral. Redirecionamentos e query strings seguem as limitações de CSP documentadas na matriz oficial.
+- **B-5.** A raiz online é privada e sem armazenamento. O worker valida o fallback público e mantém a recuperação de cache v2 para v3.
+- **M-5 e B-6.** Dependências travadas conforme o baseline. O check `verify` executa os testes CETEC, de instalação e worker, além do gate de auditoria.
+
+A [Matriz CETEC](https://github.com/Leandroctr/pwa-install-landings/tree/6096042c9c2782fc34bd50288b6eeef2d9ab70f7/docs/WHITE_LABEL_CETEC_MATRIX.md) registra as pendências de revalidação formal. A homologação física e a liberação comercial seguem fluxos próprios.

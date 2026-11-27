@@ -75,6 +75,9 @@ test("workflow runs the locked static validation matrix", () => {
   assert.match(workflow, /cache:\s*npm/);
   assert.match(workflow, /pull_request:/);
   assert.match(workflow, /push:/);
+  assert.match(workflow, /npm audit --audit-level=info --json/);
+  assert.match(workflow, /npm audit --omit=dev --audit-level=info --json/);
+  assert.ok(workflow.includes('test "$full_status" -eq 0 && test "$production_status" -eq 0'));
 });
 
 test("workflow has no deploy, real integration, or secret dependency", () => {
