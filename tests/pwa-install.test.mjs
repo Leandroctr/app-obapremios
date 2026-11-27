@@ -121,6 +121,9 @@ test("the installation center uses only the supplied brand's app icon", () => {
 });
 
 test("manifest, service worker and OneSignal integration invariants remain intact", () => {
+  assert.match(oneSignalInitializerSource, /serviceWorkerOverrideForTypical: true/);
+  assert.match(oneSignalInitializerSource, /serviceWorkerParam: \{ scope: "\/onesignal\/" \}/);
+  assert.match(oneSignalInitializerSource, /serviceWorkerPath: "OneSignalSDKWorker\.js"/);
   assert.match(manifestSource, /start_url: "\/"/);
   assert.match(manifestSource, /display: "standalone"/);
   assert.match(serviceWorkerSource, /const CACHE_NAME = CACHE_PREFIX \+ "v3"/);

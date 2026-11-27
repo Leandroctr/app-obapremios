@@ -103,8 +103,10 @@ export function OneSignalInitializer() {
     void OneSignal.init({
       appId,
       autoResubscribe: true,
+      // Keep the existing worker URL for subscribers and reserve root scope for the PWA worker.
+      serviceWorkerOverrideForTypical: true,
       serviceWorkerParam: { scope: "/onesignal/" },
-      serviceWorkerPath: "onesignal/OneSignalSDKWorker.js",
+      serviceWorkerPath: "OneSignalSDKWorker.js",
     }).then(async () => {
       debugLog("OneSignal init resolved.", {
         hasActiveSubscription: Boolean(OneSignal.User.PushSubscription.id),
