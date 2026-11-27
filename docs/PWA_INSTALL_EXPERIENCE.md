@@ -6,6 +6,16 @@ A Central `/instalar` usa nome curto, ícones e cores do tenant. O Android ofere
 
 A raiz usa Splash React/CSS, abertura da plataforma com uma única navegação, CTA, suporte e temporizador de contingência. O Clube VIP segue a configuração do tenant. O launcher deixa inertes as referências a HTML legado, que permanecem preservadas no cadastro histórico.
 
+### Correção do Clube VIP em 27/11/2026
+
+O HTML pré-renderizado do deploy `3daeda3299ec711def4fe14ebb1ea56dd061802b` entregava `notificationsEnabled=false` ao banner. A linha do tenant e a API dinâmica `/api/settings` já retornavam `true`. O banner passou a usar a mesma resposta de configuração que alimenta o Splash e é oferecido na raiz quando o SDK está pronto, a permissão está disponível e ainda falta uma inscrição ativa.
+
+O temporizador configurado dá tempo para a oferta aparecer. A ativação explícita pausa a contagem enquanto a solicitação de permissão está em andamento. Permissão previamente concedida sem inscrição ativa permite tentar a inscrição pelo mesmo botão. Uma sincronização confirmada pode antecipar a abertura da plataforma. O CTA “Abrir agora” permanece disponível, e “Agora não” mantém a ocultação de 24 horas.
+
+O SDK publicado em modo Typical Site tentava registrar o worker do OneSignal com o escopo `/`, também usado pelo worker v3 do PWA. O inicializador agora aplica `serviceWorkerOverrideForTypical` com escopo `/onesignal/` e conserva a URL `/OneSignalSDKWorker.js` para as inscrições existentes. Os dois scripts permanecem hospedados nos endereços anteriores. O prompt de permissão usa a interface nativa do navegador, com a CSP vigente.
+
+Para repetir a homologação, use o ícone do PWA em um aparelho de teste autorizado. Verifique a inscrição pelo banner e a persistência em nova abertura. Depois, valide o recebimento e a abertura com um envio restrito à inscrição desse aparelho. A recuperação operacional pode usar o deployment anterior do Oba enquanto se prepara uma reversão por PR.
+
 O worker avança de `app-big-v2` para `app-big-v3` com navegação network-first. Atualiza `/pwa-offline` por requisição de mesma origem sem credenciais nem redirects, valida resposta e mantém o último fallback válido. Requisições autorizadas e rotas admin/API ficam fora do fallback. A raiz usa `private, no-store`. A rota offline usa a CSP geral.
 
 Validar em aparelhos reais a atualização sobre instalação v2, abertura offline, reconexão, Android, iPhone e retomada no launcher. O [checklist oficial](https://github.com/Leandroctr/pwa-install-landings/tree/6096042c9c2782fc34bd50288b6eeef2d9ab70f7/docs/WHITE_LABEL_ACCEPTANCE_CHECKLIST.md) orienta a homologação.

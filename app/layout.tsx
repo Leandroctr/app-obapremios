@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
-import { NotificationVipBanner } from "@/components/notification-vip-banner";
 import { OneSignalInitializer } from "@/components/onesignal-initializer";
 import { ServiceWorkerRegister } from "@/components/service-worker-register";
 import { getAppSettings } from "@/lib/app-settings.server";
@@ -59,7 +58,6 @@ export default async function RootLayout({
       <body>
         <ServiceWorkerRegister />
         <OneSignalInitializer />
-        <NotificationVipBanner notificationsEnabled={settings.notificationsEnabled} />
         {children}
       </body>
     </html>

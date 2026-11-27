@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState, type MouseEvent } from "react";
 import { NativeSplash } from "@/components/native-splash";
 import { NotificationButton } from "@/components/notification-button";
+import { NotificationVipBanner } from "@/components/notification-vip-banner";
 import { appConfigClient } from "@/lib/app-config.client";
 import type { AppSettings } from "@/lib/app-settings";
 
@@ -30,6 +31,7 @@ const fallbackSettings: LauncherSettings = {
 
 export default function Home() {
   const [resolvedSettings, setResolvedSettings] = useState<LauncherSettings | null>(null);
+  const [activatingNotifications, setActivatingNotifications] = useState(false);
   const hasRedirected = useRef(false);
   const settings = resolvedSettings ?? fallbackSettings;
   const platformUrl = resolvedSettings?.platformUrl.trim();
@@ -45,8 +47,6 @@ export default function Home() {
     const controller = new AbortController();
     const settingsTimer = window.setTimeout(() => controller.abort(), 5000);
     let active = true;
-    let redirectTimer: number | undefined;
-    let pushSyncListener: (() => void) | undefined;
 
     async function loadSettings() {
       let loaded = fallbackSettings;
@@ -62,15 +62,7 @@ export default function Home() {
       } finally {
         window.clearTimeout(settingsTimer);
       }
-      if (!active) return;
-
-      const url = loaded.platformUrl.trim();
-      setResolvedSettings(loaded);
-      if (url && url !== "#") {
-        pushSyncListener = () => redirectToPlatform(url);
-        window.addEventListener("push-sync-settled", pushSyncListener, { once: true });
-        redirectTimer = window.setTimeout(() => redirectToPlatform(url), loaded.redirectDelayMs);
-      }
+      if (active) setResolvedSettings(loaded);
     }
 
     void loadSettings();
@@ -78,12 +70,27 @@ export default function Home() {
       active = false;
       controller.abort();
       window.clearTimeout(settingsTimer);
-      window.clearTimeout(redirectTimer);
-      if (pushSyncListener) {
-        window.removeEventListener("push-sync-settled", pushSyncListener);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!openUrl) return;
+
+    const onPushSyncSettled = (event: Event) => {
+      if ((event as CustomEvent<{ ok: boolean }>).detail?.ok === true) {
+        redirectToPlatform(openUrl);
       }
     };
-  }, [redirectToPlatform]);
+
+    window.addEventListener("push-sync-settled", onPushSyncSettled);
+    const redirectTimer = activatingNotifications
+      ? undefined
+      : window.setTimeout(() => redirectToPlatform(openUrl), settings.redirectDelayMs);
+    return () => {
+      window.removeEventListener("push-sync-settled", onPushSyncSettled);
+      window.clearTimeout(redirectTimer);
+    };
+  }, [activatingNotifications, openUrl, redirectToPlatform, settings.redirectDelayMs]);
 
   function openNow(event: MouseEvent<HTMLAnchorElement>) {
     if (!openUrl || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
@@ -92,30 +99,42 @@ export default function Home() {
   }
 
   return (
-    <NativeSplash
-      appName={settings.appName}
-      logoUrl={settings.logoUrl}
-      iconUrl={settings.icon512Url || settings.icon192Url}
-      splashImageUrl={settings.splashImageUrl}
-      themeColor={settings.themeColor}
-      backgroundColor={settings.backgroundColor}
-      splashTitle={settings.splashTitle}
-      splashMessage={settings.splashMessage}
-      openUrl={openUrl}
-      supportUrl={settings.supportUrl}
-      hasPlatformError={resolvedSettings !== null && !openUrl}
-      onOpen={openNow}
-    >
+    <>
       {settings.notificationsEnabled && (
-        <details className="mt-1">
-          <summary className="cursor-pointer rounded px-3 py-2 text-sm font-semibold text-slate-700 focus-visible:outline-2">
-            Notificações
-          </summary>
-          <div className="mx-auto mt-2 w-fit max-w-full">
-            <NotificationButton themeColor={settings.themeColor} />
-          </div>
-        </details>
+        <NotificationVipBanner
+          activating={activatingNotifications}
+          onActivationChange={setActivatingNotifications}
+        />
       )}
-    </NativeSplash>
+      <NativeSplash
+        appName={settings.appName}
+        logoUrl={settings.logoUrl}
+        iconUrl={settings.icon512Url || settings.icon192Url}
+        splashImageUrl={settings.splashImageUrl}
+        themeColor={settings.themeColor}
+        backgroundColor={settings.backgroundColor}
+        splashTitle={settings.splashTitle}
+        splashMessage={settings.splashMessage}
+        openUrl={openUrl}
+        supportUrl={settings.supportUrl}
+        hasPlatformError={resolvedSettings !== null && !openUrl}
+        onOpen={openNow}
+      >
+        {settings.notificationsEnabled && (
+          <details className="mt-1">
+            <summary className="cursor-pointer rounded px-3 py-2 text-sm font-semibold text-slate-700 focus-visible:outline-2">
+              Notificações
+            </summary>
+            <div className="mx-auto mt-2 w-fit max-w-full">
+              <NotificationButton
+                activating={activatingNotifications}
+                onActivationChange={setActivatingNotifications}
+                themeColor={settings.themeColor}
+              />
+            </div>
+          </details>
+        )}
+      </NativeSplash>
+    </>
   );
 }
