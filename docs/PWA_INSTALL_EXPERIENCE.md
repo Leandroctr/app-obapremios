@@ -20,6 +20,10 @@ O worker avança de `app-big-v2` para `app-big-v3` com navegação network-first
 
 Validar em aparelhos reais a atualização sobre instalação v2, abertura offline, reconexão, Android, iPhone e retomada no launcher. O [checklist oficial](https://github.com/Leandroctr/pwa-install-landings/tree/6096042c9c2782fc34bd50288b6eeef2d9ab70f7/docs/WHITE_LABEL_ACCEPTANCE_CHECKLIST.md) orienta a homologação.
 
+Em 27/11/2026, o responsável declarou 9/9 critérios físicos aprovados, incluindo a atualização de instalação anterior, abertura offline, recuperação de conexão, inscrição VIP e recebimento. O [PR #4](https://github.com/Leandroctr/app-obapremios/pull/4) corrigiu o banner e separou os escopos dos workers. A raiz continua sob `/sw.js` e o OneSignal opera no escopo `/onesignal/`.
+
+Os PNGs oficiais de 32, 192 e 512 px publicados pelo painel atendem aos limites de 100, 300 e 500 KiB. O PWA usa esses PNGs como contingência estática e continua lendo os ícones configurados do tenant. O PNG de 512 px preserva o lettering completo no uso `any`. O recorte maskable corta parte do texto e requer uma variante própria.
+
 As seções seguintes registram a proposta histórica de modal de instalação.
 
 # PWA Install Experience

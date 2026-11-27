@@ -6,6 +6,7 @@ import { NotificationButton } from "@/components/notification-button";
 import { NotificationVipBanner } from "@/components/notification-vip-banner";
 import { appConfigClient } from "@/lib/app-config.client";
 import type { AppSettings } from "@/lib/app-settings";
+import { fallbackIcons } from "@/lib/pwa-icon-assets";
 
 type LauncherSettings = Pick<AppSettings,
   "appName" | "logoUrl" | "icon192Url" | "icon512Url" | "splashImageUrl" |
@@ -18,8 +19,8 @@ const fallbackSettings: LauncherSettings = {
   platformUrl: appConfigClient.platformUrl,
   supportUrl: appConfigClient.supportUrl,
   logoUrl: appConfigClient.logoUrl,
-  icon192Url: "/icons/icon-192.svg",
-  icon512Url: "/icons/icon-512.svg",
+  icon192Url: fallbackIcons.icon192,
+  icon512Url: fallbackIcons.icon512,
   themeColor: appConfigClient.themeColor,
   backgroundColor: appConfigClient.backgroundColor,
   splashTitle: appConfigClient.appName,

@@ -1,4 +1,5 @@
 import { appConfig } from "@/lib/app-config";
+import { fallbackIcons } from "@/lib/pwa-icon-assets";
 
 export type AppSettings = {
   id?: string;
@@ -73,8 +74,8 @@ export function getFallbackAppSettings(): AppSettings {
     supportUrl: appConfig.supportUrl,
     publicUrl: appConfig.publicUrl,
     logoUrl: appConfig.logoUrl,
-    icon192Url: placeholderIcons.icon192,
-    icon512Url: placeholderIcons.icon512,
+    icon192Url: fallbackIcons.icon192,
+    icon512Url: fallbackIcons.icon512,
     faviconUrl: "",
     themeColor: appConfig.themeColor,
     backgroundColor: appConfig.backgroundColor,

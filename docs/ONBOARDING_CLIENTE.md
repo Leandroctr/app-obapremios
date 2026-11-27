@@ -2,6 +2,8 @@
 
 Para o ciclo atual do Oba Prêmios, a [documentação White Label V2.0](https://github.com/Leandroctr/pwa-install-landings/tree/6096042c9c2782fc34bd50288b6eeef2d9ab70f7/docs) rege a implantação individual e o checklist por cliente. As seções abaixo registram o procedimento anterior e o contexto do ambiente compartilhado.
 
+O Oba Prêmios concluiu a homologação funcional do PWA e da landing com 9/9 critérios físicos declarados pelo responsável em 27/11/2026. A gestão global pertence ao plano administrativo central. O PWA consumidor mantém acesso administrativo por tenant com MFA TOTP/AAL2. O ciclo de cada novo cliente segue o [protocolo White Label](https://github.com/Leandroctr/pwa-install-landings/blob/main/docs/WHITE_LABEL_ONBOARDING_PROTOCOL.md).
+
 # Checklist de Onboarding de Novo Cliente
 
 **Projeto:** app-big-pwa  

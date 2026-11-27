@@ -1366,3 +1366,11 @@ Baseline consumidor MegaBingo7 @ 652f72a4d886c6e87eafd3812df710c235d6b969. O por
 - **M-5 e B-6.** Dependências travadas conforme o baseline. O check `verify` executa os testes CETEC, de instalação e worker, além do gate de auditoria.
 
 A [Matriz CETEC](https://github.com/Leandroctr/pwa-install-landings/tree/6096042c9c2782fc34bd50288b6eeef2d9ab70f7/docs/WHITE_LABEL_CETEC_MATRIX.md) registra as pendências de revalidação formal. A homologação física e a liberação comercial seguem fluxos próprios.
+
+## 23. Clube VIP e identidade final do Oba Prêmios — 2026-11-27
+
+O [PR #4](https://github.com/Leandroctr/app-obapremios/pull/4) corrigiu a leitura inicial desatualizada de `notificationsEnabled`. O launcher consulta `/api/settings` e preserva a solicitação de permissão por clique. A abertura automática aguarda enquanto a solicitação estiver ativa e a sincronização bem-sucedida pode antecipar a navegação. O SDK OneSignal mantém o App ID e o script histórico `/onesignal/OneSignalSDKWorker.js`, com escopo dedicado `/onesignal/`. O worker v3 do PWA permanece no escopo `/`.
+
+O fechamento atualiza os ícones estáticos de contingência e mantém as URLs do painel como fonte preferencial. O PNG de 512 px usa `purpose: any` porque parte do lettering excede a área segura de recorte. Uma variante maskable dedicada precisa de aprovação visual. A etapa preserva a configuração dinâmica, o banco, as inscrições, o histórico e os controles de autenticação e segurança.
+
+O responsável declarou a homologação física dos nove critérios, incluindo inscrição VIP e recebimento. O acesso administrativo com MFA integra essa declaração. A validação específica da conta administrativa restrita e a revalidação formal de M-2, B-5 e C-2 continuam pendentes.
